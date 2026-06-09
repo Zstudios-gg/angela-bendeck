@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="Ángela Bendeck — Honduran singer, songwriter, and international artist." />
+  <meta name="theme-color" content="#0F0F1A" />
+  <title>Ángela Bendeck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ░░ NAV ░░ -->
+  <nav class="nav" id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__brand">
+      <span class="nav__dot" aria-hidden="true"></span>
+      <span>Ángela Bendeck</span>
+    </div>
+    <button class="nav__burger" id="burger" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__menu" id="nav-menu" role="list">
+      <li><a href="#who" class="nav__link">Who</a></li>
+      <li><a href="#story" class="nav__link">Story</a></li>
+      <li><a href="#music" class="nav__link">Music</a></li>
+      <li><a href="#performances" class="nav__link">Performances</a></li>
+      <li><a href="#legacy" class="nav__link">Legacy</a></li>
+      <li><a href="#follow" class="nav__link nav__link--cta">Follow Her</a></li>
+    </ul>
+  </nav>
+  <div class="nav__overlay" id="nav-overlay" aria-hidden="true"></div>
+
+  <main>
+
+    <!-- ░░ HERO ░░ -->
+    <section class="hero" id="home" aria-label="Hero">
+      <div class="hero__bg" aria-hidden="true">
+        <div class="hero__grain"></div>
+        <div class="hero__glow hero__glow--1"></div>
+        <div class="hero__glow hero__glow--2"></div>
+      </div>
+      <div class="hero__content">
+        <p class="hero__eyebrow reveal">Honduras · Music · Identity</p>
+        <h1 class="hero__title">
+          <span class="hero__line reveal" data-delay="100">Ángela</span>
+          <span class="hero__line hero__line--gold reveal" data-delay="200">Bendeck</span>
+        </h1>
+        <p class="hero__sub reveal" data-delay="300">
+          Singer · Songwriter · International Artist
+        </p>
+        <p class="hero__sub hero__sub--es reveal" data-delay="400">
+          Cantante · Compositora · Artista Internacional
+        </p>
+        <a href="#who" class="hero__scroll reveal" data-delay="500" aria-label="Scroll down">
+          <span class="hero__scroll-text">Explore</span>
+          <span class="hero__scroll-arrow" aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <div class="hero__flag" aria-label="Honduras flag colors" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+    </section>
+
+    <!-- ░░ WHO ░░ -->
+    <section class="section" id="who" aria-labelledby="who-title">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__eyebrow">01 / Who is She?</span>
+          <h2 class="section__title" id="who-title">Meet the Artist</h2>
+          <p class="section__title-es">Conoce a la Artista</p>
+        </div>
+        <div class="who__grid">
+          <div class="who__text reveal">
+            <p class="who__body">
+              Ángela Bendeck is one of Honduras's most recognized female voices. Born and raised in Honduras, she began her artistic career as the lead singer of the band <strong>"Esencia"</strong>, touring internationally before launching a celebrated solo career.
+            </p>
+            <p class="who__body who__body--es">
+              Ángela Bendeck es una de las voces femeninas más reconocidas de Honduras. Inició su carrera como vocalista principal de la banda <strong>"Esencia"</strong>, recorriendo el mundo antes de lanzar su exitosa carrera como solista.
+            </p>
+            <div class="who__tags">
+              <span class="tag">Pop</span>
+              <span class="tag">Ballad</span>
+              <span class="tag">Jazz</span>
+              <span class="tag">Rock</span>
+              <span class="tag">Dance-Pop</span>
+            </div>
+          </div>
+          <div class="who__cards reveal" data-delay="150">
+            <div class="who__card">
+              <span class="who__card-icon" aria-hidden="true">🎤</span>
+              <strong>Singer &amp; Songwriter</strong>
+              <span>Cantante y Compositora</span>
+            </div>
+            <div class="who__card">
+              <span class="who__card-icon" aria-hidden="true">🌎</span>
+              <strong>International Stages</strong>
+              <span>Escenarios Internacionales</span>
+            </div>
+            <div class="who__card">
+              <span class="who__card-icon" aria-hidden="true">🇭🇳</span>
+              <strong>Honduras's Pride</strong>
+              <span>Orgullo Hondureño</span>
+            </div>
+            <div class="who__card">
+              <span class="who__card-icon" aria-hidden="true">💫</span>
+              <strong>Hope &amp; Resilience</strong>
+              <span>Esperanza y Resiliencia</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ STORY / TIMELINE ░░ -->
+    <section class="section section--dark" id="story" aria-labelledby="story-title">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__eyebrow">02 / Her Story</span>
+          <h2 class="section__title" id="story-title">Career Path</h2>
+          <p class="section__title-es">Trayectoria</p>
+        </div>
+        <ol class="timeline" aria-label="Career timeline">
+          <li class="timeline__item reveal">
+            <div class="timeline__marker" aria-hidden="true"></div>
+            <div class="timeline__content">
+              <span class="timeline__year">Early Career</span>
+              <h3 class="timeline__event">Band "Esencia"</h3>
+              <p class="timeline__desc">Lead singer of Esencia. Toured internationally in Taiwan, Panama, Nicaragua and El Salvador.</p>
+              <p class="timeline__desc-es">Vocalista principal de Esencia. Giras internacionales por Taiwán, Panamá, Nicaragua y El Salvador.</p>
+            </div>
+          </li>
+          <li class="timeline__item reveal" data-delay="100">
+            <div class="timeline__marker" aria-hidden="true"></div>
+            <div class="timeline__content">
+              <span class="timeline__year">2005</span>
+              <h3 class="timeline__event">Rojo Internacional — Chile</h3>
+              <p class="timeline__desc">Participated in one of Latin America's biggest musical reality shows, broadcast across the continent.</p>
+              <p class="timeline__desc-es">Participó en uno de los reality musicales más importantes de Latinoamérica.</p>
+            </div>
+          </li>
+          <li class="timeline__item reveal" data-delay="150">
+            <div class="timeline__marker" aria-hidden="true"></div>
+            <div class="timeline__content">
+              <span class="timeline__year">2008</span>
+              <h3 class="timeline__event">Album: "Despertaremos con el Sol"</h3>
+              <p class="timeline__desc">Released with Esencia — "We Will Wake Up with the Sun." A defining album of Honduran pop.</p>
+              <p class="timeline__desc-es">Lanzado con Esencia, un álbum que definió el pop hondureño de la época.</p>
+            </div>
+          </li>
+          <li class="timeline__item reveal" data-delay="200">
+            <div class="timeline__marker" aria-hidden="true"></div>
+            <div class="timeline__content">
+              <span class="timeline__year">2012</span>
+              <h3 class="timeline__event">Solo Debut: "¿Where Is Your Heart?"</h3>
+              <p class="timeline__desc">Her first solo album, a bilingual project mixing Spanish and English, marking a bold new chapter.</p>
+              <p class="timeline__desc-es">Su primer álbum como solista, un proyecto bilingüe que marcó un nuevo comienzo.</p>
+            </div>
+          </li>
+          <li class="timeline__item reveal" data-delay="250">
+            <div class="timeline__marker timeline__marker--gold" aria-hidden="true"></div>
+            <div class="timeline__content">
+              <span class="timeline__year">2013</span>
+              <h3 class="timeline__event">⭐ Viña del Mar — Chile</h3>
+              <p class="timeline__desc">Represented Honduras at the most prestigious international song festival in Latin America with <em>"Mi Felicidad."</em></p>
+              <p class="timeline__desc-es">Representó a Honduras en el Festival Internacional de la Canción de Viña del Mar con <em>"Mi Felicidad."</em></p>
+            </div>
+          </li>
+          <li class="timeline__item reveal" data-delay="300">
+            <div class="timeline__marker" aria-hidden="true"></div>
+            <div class="timeline__content">
+              <span class="timeline__year">Recent</span>
+              <h3 class="timeline__event">English Pop Era</h3>
+              <p class="timeline__desc">Returned to music with motivational English songs: <em>"Say I'm Possible," "Show Up,"</em> and <em>"OK Monday."</em></p>
+              <p class="timeline__desc-es">Regresó con canciones motivacionales en inglés enfocadas en el crecimiento personal.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ░░ MUSIC ░░ -->
+    <section class="section" id="music" aria-labelledby="music-title">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__eyebrow">03 / Her Music</span>
+          <h2 class="section__title" id="music-title">Greatest Hits</h2>
+          <p class="section__title-es">Sus Éxitos</p>
+        </div>
+
+        <!-- Video embed -->
+        <div class="video-wrap reveal" data-delay="100">
+          <div class="video-wrap__inner">
+            <iframe
+              src="https://www.youtube.com/embed/videoseries?list=PLSearch&enablejsapi=1"
+              data-src="https://www.youtube.com/embed/WkLNKKV_D8Y?rel=0&modestbranding=1"
+              title="Ángela Bendeck - Mi Felicidad (Viña del Mar 2013)"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+              frameborder="0"
+            ></iframe>
+          </div>
+          <p class="video-wrap__caption">
+            <span class="gold">Mi Felicidad</span> — Live at Viña del Mar International Song Festival, Chile 2013
+          </p>
+        </div>
+
+        <!-- Song cards -->
+        <div class="songs__grid">
+          <button class="song-card reveal" data-delay="0" aria-label="Song: Mi Felicidad">
+            <div class="song-card__num" aria-hidden="true">01</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">Mi Felicidad</strong>
+              <span class="song-card__sub">My Happiness · Ballad / Pop</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">Her most iconic song. Performed at Viña del Mar 2013, representing Honduras internationally.</div>
+          </button>
+          <button class="song-card reveal" data-delay="60" aria-label="Song: Say I'm Possible">
+            <div class="song-card__num" aria-hidden="true">02</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">Say I'm Possible</strong>
+              <span class="song-card__sub">English Pop · Motivational</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">Wordplay: "impossible" becomes "I'm possible." A motivational anthem for her new English-language era.</div>
+          </button>
+          <button class="song-card reveal" data-delay="120" aria-label="Song: Show Up">
+            <div class="song-card__num" aria-hidden="true">03</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">Show Up</strong>
+              <span class="song-card__sub">English Dance-Pop</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">About showing up for yourself. Energetic pop-dance track from her modern English era.</div>
+          </button>
+          <button class="song-card reveal" data-delay="180" aria-label="Song: OK Monday">
+            <div class="song-card__num" aria-hidden="true">04</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">OK Monday</strong>
+              <span class="song-card__sub">English Pop · Upbeat</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">Start the week with positivity. Upbeat, feel-good track about embracing new beginnings.</div>
+          </button>
+          <button class="song-card reveal" data-delay="240" aria-label="Song: Platónico">
+            <div class="song-card__num" aria-hidden="true">05</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">Platónico</strong>
+              <span class="song-card__sub">Platonic · Ballad</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">An emotional ballad from her solo era — introspective and deeply personal.</div>
+          </button>
+          <button class="song-card reveal" data-delay="300" aria-label="Song: Así Te Amo Honduras">
+            <div class="song-card__num" aria-hidden="true">06</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">Así Te Amo, Honduras</strong>
+              <span class="song-card__sub">This Is How I Love You · Patriotic</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">A heartfelt tribute to her homeland. One of her most emotionally resonant songs.</div>
+          </button>
+          <button class="song-card reveal" data-delay="360" aria-label="Song: Hope in My Soul">
+            <div class="song-card__num" aria-hidden="true">07</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">Hope in My Soul</strong>
+              <span class="song-card__sub">English Ballad · Inspirational</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">Emotional English ballad about inner strength, faith, and perseverance through hard times.</div>
+          </button>
+          <button class="song-card reveal" data-delay="420" aria-label="Song: Mi Sol">
+            <div class="song-card__num" aria-hidden="true">08</div>
+            <div class="song-card__info">
+              <strong class="song-card__title">Mi Sol</strong>
+              <span class="song-card__sub">My Sun · Latin Pop</span>
+            </div>
+            <div class="song-card__desc" aria-hidden="true">Warm, radiant Latin pop with strong Honduran cultural influences and emotional depth.</div>
+          </button>
+        </div>
+        <p class="songs__hint" aria-label="Tap any card to read more">Tap a card to read more · Toca una tarjeta para más info</p>
+      </div>
+    </section>
+
+    <!-- ░░ PERFORMANCES ░░ -->
+    <section class="section section--dark" id="performances" aria-labelledby="perf-title">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__eyebrow">04 / Live Performances</span>
+          <h2 class="section__title" id="perf-title">On Stage</h2>
+          <p class="section__title-es">En el Escenario</p>
+        </div>
+        <div class="perf__grid">
+          <article class="perf__card reveal" data-delay="0">
+            <div class="perf__card-top">
+              <span class="perf__flag" aria-hidden="true">🇨🇱</span>
+              <span class="perf__year-badge">2013</span>
+            </div>
+            <h3 class="perf__card-title">Viña del Mar Festival</h3>
+            <p class="perf__card-loc">Chile</p>
+            <p class="perf__card-desc">The most prestigious international song festival in Latin America. She performed "Mi Felicidad" representing Honduras before a massive global audience.</p>
+            <span class="perf__tag">⭐ Career highlight</span>
+          </article>
+          <article class="perf__card reveal" data-delay="100">
+            <div class="perf__card-top">
+              <span class="perf__flag" aria-hidden="true">🇨🇱</span>
+              <span class="perf__year-badge">2005</span>
+            </div>
+            <h3 class="perf__card-title">Rojo Internacional</h3>
+            <p class="perf__card-loc">Chile — TV Reality Show</p>
+            <p class="perf__card-desc">Competed in one of Latin America's most-watched musical reality shows, gaining exposure across the entire continent.</p>
+            <span class="perf__tag">📺 Television</span>
+          </article>
+          <article class="perf__card reveal" data-delay="200">
+            <div class="perf__card-top">
+              <span class="perf__flag" aria-hidden="true">🌏</span>
+              <span class="perf__year-badge">Early Career</span>
+            </div>
+            <h3 class="perf__card-title">International Tours</h3>
+            <p class="perf__card-loc">Taiwan · Panama · Nicaragua · El Salvador</p>
+            <p class="perf__card-desc">With Esencia, she toured across Asia and Central America — proving Honduran music has no borders.</p>
+            <span class="perf__tag">✈️ World Tour</span>
+          </article>
+          <article class="perf__card reveal" data-delay="300">
+            <div class="perf__card-top">
+              <span class="perf__flag" aria-hidden="true">🇭🇳</span>
+              <span class="perf__year-badge">Honduras</span>
+            </div>
+            <h3 class="perf__card-title">Divas en Concierto</h3>
+            <p class="perf__card-loc">Honduras — Bel Canto &amp; Opera</p>
+            <p class="perf__card-desc">Performed alongside top Honduran singers in an opera and bel canto concert, showcasing a classical dimension of her voice.</p>
+            <span class="perf__tag">🎭 Classical</span>
+          </article>
+          <article class="perf__card reveal" data-delay="400">
+            <div class="perf__card-top">
+              <span class="perf__flag" aria-hidden="true">🤝</span>
+              <span class="perf__year-badge">Various</span>
+            </div>
+            <h3 class="perf__card-title">Benefit Concerts</h3>
+            <p class="perf__card-loc">Honduras — Cultural &amp; Humanitarian</p>
+            <p class="perf__card-desc">Used her platform to participate in charitable events, reinforcing her commitment to Honduran culture and community.</p>
+            <span class="perf__tag">❤️ Community</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ LEGACY ░░ -->
+    <section class="section" id="legacy" aria-labelledby="legacy-title">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__eyebrow">05 / Legacy</span>
+          <h2 class="section__title" id="legacy-title">What She Left Behind</h2>
+          <p class="section__title-es">Su Legado</p>
+        </div>
+        <blockquote class="legacy__quote reveal">
+          <p>"She is more than a singer — she is a symbol of Honduran pride, artistic resilience, and the power of music to cross every border."</p>
+        </blockquote>
+        <div class="legacy__grid">
+          <div class="legacy__item reveal" data-delay="0">
+            <span class="legacy__icon" aria-hidden="true">🏆</span>
+            <h3>Pioneer</h3>
+            <p>One of the first Honduran women to compete at Viña del Mar — Latin America's most watched stage.</p>
+          </div>
+          <div class="legacy__item reveal" data-delay="100">
+            <span class="legacy__icon" aria-hidden="true">🌐</span>
+            <h3>Global Voice</h3>
+            <p>Brought Honduran music to Chile, Taiwan, Panama and beyond, proving local talent reaches global ears.</p>
+          </div>
+          <div class="legacy__item reveal" data-delay="200">
+            <span class="legacy__icon" aria-hidden="true">💪</span>
+            <h3>Resilience</h3>
+            <p>Returned to music after years away — releasing motivational English songs for a new generation.</p>
+          </div>
+          <div class="legacy__item reveal" data-delay="300">
+            <span class="legacy__icon" aria-hidden="true">🎓</span>
+            <h3>Inspiration</h3>
+            <p>Her story teaches young Hondurans that talent combined with perseverance can reach any stage in the world.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ FOLLOW ░░ -->
+    <section class="section section--dark section--follow" id="follow" aria-labelledby="follow-title">
+      <div class="container">
+        <div class="section__header reveal">
+          <span class="section__eyebrow">06 / Follow Her Journey</span>
+          <h2 class="section__title" id="follow-title">Find Ángela Online</h2>
+          <p class="section__title-es">Encuéntrala en línea</p>
+        </div>
+        <div class="follow__grid">
+          <a href="https://open.spotify.com/search/Angela%20Bendeck" target="_blank" rel="noopener noreferrer" class="follow__btn follow__btn--spotify reveal" data-delay="0" aria-label="Listen on Spotify">
+            <svg class="follow__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.622.622 0 01-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 01-.277-1.215c3.809-.87 7.076-.496 9.712 1.115a.623.623 0 01.207.857zm1.224-2.722a.78.78 0 01-1.072.257c-2.687-1.652-6.785-2.131-9.965-1.166a.78.78 0 01-.973-.519.781.781 0 01.519-.973c3.632-1.102 8.147-.568 11.234 1.329a.78.78 0 01.257 1.072zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71a.937.937 0 11-.543-1.794c3.532-1.072 9.404-.865 13.115 1.338a.937.937 0 01-.954 1.613z"/></svg>
+            <span>Spotify</span>
+          </a>
+          <a href="https://www.youtube.com/results?search_query=Angela+Bendeck" target="_blank" rel="noopener noreferrer" class="follow__btn follow__btn--youtube reveal" data-delay="80" aria-label="Watch on YouTube">
+            <svg class="follow__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            <span>YouTube</span>
+          </a>
+          <a href="https://www.facebook.com/search/top?q=Angela%20Bendeck" target="_blank" rel="noopener noreferrer" class="follow__btn follow__btn--facebook reveal" data-delay="160" aria-label="Follow on Facebook">
+            <svg class="follow__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Facebook</span>
+          </a>
+          <a href="https://www.instagram.com/explore/search/keyword/?q=Angela%20Bendeck" target="_blank" rel="noopener noreferrer" class="follow__btn follow__btn--instagram reveal" data-delay="240" aria-label="Follow on Instagram">
+            <svg class="follow__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            <span>Instagram</span>
+          </a>
+        </div>
+        <p class="follow__note reveal" data-delay="300">
+          Presented by students of <strong>English class</strong> · Honduras · 2026
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer class="footer" role="contentinfo">
+    <p>Ángela Bendeck Fan Page · Made with ❤️ from Honduras · English Class Project 2026</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
