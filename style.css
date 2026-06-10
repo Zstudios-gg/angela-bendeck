@@ -195,32 +195,39 @@ ul, ol {
   display: none;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
-  width: 40px; height: 40px;
-  padding: 8px;
+  align-items: center;
+  gap: 0;                   /* gap controlled by margin on spans */
+  width: 44px; height: 44px;
+  padding: 10px;
   border-radius: var(--radius-sm);
   z-index: 1001;
   -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
 }
 
 .nav__burger span {
   display: block;
-  width: 22px; height: 2px;
+  width: 24px; height: 2px;
   background: var(--off-white);
   border-radius: 2px;
-  transition: transform var(--transition), opacity var(--transition);
+  transition: transform 0.3s ease, opacity 0.3s ease;
   transform-origin: center;
 }
 
+/* Explicit margins so spacing is always consistent */
+.nav__burger span:nth-child(1) { margin-bottom: 6px; }
+.nav__burger span:nth-child(2) { margin-bottom: 6px; }
+.nav__burger span:nth-child(3) { margin-bottom: 0; }
+
 .nav__burger[aria-expanded="true"] span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
+  transform: translateY(8px) rotate(45deg);
 }
 .nav__burger[aria-expanded="true"] span:nth-child(2) {
   opacity: 0;
   transform: scaleX(0);
 }
 .nav__burger[aria-expanded="true"] span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
+  transform: translateY(-8px) rotate(-45deg);
 }
 
 /* Mobile overlay */
@@ -946,14 +953,16 @@ ul, ol {
    FOLLOW
    ═══════════════════════════════════════════════════════════ */
 .section--follow {
-  padding-bottom: 100px;
+  padding-bottom: 80px;
+  position: relative;  /* ensure stacking context is correct */
+  z-index: 1;
 }
 
 .follow__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
-  max-width: 600px;
+  max-width: 560px;
   margin: 0 auto 32px;
 }
 
@@ -962,6 +971,7 @@ ul, ol {
 }
 
 .follow__btn {
+  display: -webkit-flex;  /* Safari older */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -972,11 +982,17 @@ ul, ol {
   font-size: 0.85rem;
   font-weight: 600;
   transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
-  border: none;
   color: #fff;
+  text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   cursor: pointer;
+  /* Do NOT set border:none on <a> tags — breaks Safari link behavior */
+  /* user-select none prevents accidental text selection on mobile */
+  -webkit-user-select: none;
+  user-select: none;
+  /* Ensure tap area is big enough on mobile */
+  min-height: 72px;
 }
 
 .follow__btn:hover,
