@@ -11,17 +11,17 @@
      SONG → VIDEO MAP
      ══════════════════════════════════════════════════════════ */
   var SONG_VIDEOS = {
-    'Mi Felicidad':          'WkLNKKV_D8Y',
-    'Say I\'m Possible':     'ZNWZFCdJXBw',
-    'Show Up':               '',
-    'OK Monday':             '',
-    'Platónico':             '',
-    'Así Te Amo, Honduras':  '',
-    'Hope in My Soul':       '',
-    'Mi Sol':                ''
+    'Mi Felicidad':          'https://youtu.be/dvvh-z3hXUM?si=3PRlVJ1TFUAvTA4n',
+    'Say I\'m Possible':     'https://youtu.be/flz1K0ghKhU?si=eI9N6kesSUqx_Ajf',
+    'Show Up':               'https://youtu.be/0TOXQV4pDbQ?si=ajXKs4EpbXtFxeXC',
+    'OK Monday':             'https://youtu.be/C_suplZN-Kg?si=-9eu-mKeMcFRtBh0',
+    'Platónico':             'https://youtu.be/gYgaT9TmPvE?si=2cNsmOTIznuss7V5',
+    'Así Te Amo, Honduras':  'https://youtu.be/NOLcyDB7voo?si=7kO56nVkjK3lFsxW',
+    'Hope in My Soul':       'https://youtu.be/SBn82rmLXdA?si=APetOzdrwgBweNBa',
+    'Mi Sol':                'https://youtu.be/mRfKqPqvk-o?si=3VIdhYkIHTtGwMP_'
   };
 
-  var DEFAULT_VIDEO_ID = 'WkLNKKV_D8Y';
+  var DEFAULT_VIDEO_ID = 'https://youtu.be/dvvh-z3hXUM?si=3PRlVJ1TFUAvTA4n';
 
   /* ══════════════════════════════════════════════════════════
      1. UTILITY
