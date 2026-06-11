@@ -1,7 +1,7 @@
 /**
- * Ángela Bendeck — script.js  (v2 — Android/iOS touch fixed)
- * Fixes: touch events, z-index stacking, iframe interaction,
- *        interactive video per song, smooth scroll on mobile
+ * Ángela Bendeck — script.js  (v3 — YouTube embed fix)
+ * Fixes: touch events, iframe interaction, autoplay policy,
+ *        SVG pointer-events, double-fire prevention
  */
 
 (function () {
@@ -9,13 +9,11 @@
 
   /* ══════════════════════════════════════════════════════════
      SONG → VIDEO MAP
-     Add a videoId for every song card that has one.
-     Cards without a videoId will show the default embed.
      ══════════════════════════════════════════════════════════ */
   var SONG_VIDEOS = {
     'Mi Felicidad':          'WkLNKKV_D8Y',
-    'Say I\'m Possible':     'ZNWZFCdJXBw',   // update with real IDs
-    'Show Up':               '',               // leave empty = keep default
+    'Say I\'m Possible':     'ZNWZFCdJXBw',
+    'Show Up':               '',
     'OK Monday':             '',
     'Platónico':             '',
     'Así Te Amo, Honduras':  '',
@@ -23,7 +21,7 @@
     'Mi Sol':                ''
   };
 
-  var DEFAULT_VIDEO_ID = 'WkLNKKV_D8Y'; // Mi Felicidad
+  var DEFAULT_VIDEO_ID = 'WkLNKKV_D8Y';
 
   /* ══════════════════════════════════════════════════════════
      1. UTILITY
@@ -32,7 +30,7 @@
   function $$(sel, ctx) { return Array.from((ctx || document).querySelectorAll(sel)); }
 
   /* ══════════════════════════════════════════════════════════
-     2. iOS VIEWPORT HEIGHT FIX  (run first, before layout)
+     2. iOS VIEWPORT HEIGHT FIX
      ══════════════════════════════════════════════════════════ */
   function setVH() {
     var vh = window.innerHeight * 0.01;
@@ -43,9 +41,7 @@
   window.addEventListener('orientationchange', function () { setTimeout(setVH, 250); }, { passive: true });
 
   /* ══════════════════════════════════════════════════════════
-     3. NAV — scroll shrink + mobile burger
-        KEY FIX: overlay must NOT cover nav links or page content
-        when menu is CLOSED. Use pointer-events: none when inactive.
+     3. NAV
      ══════════════════════════════════════════════════════════ */
   var nav        = $('#nav');
   var burger     = $('#burger');
@@ -81,10 +77,8 @@
     isMenuOpen ? closeMenu() : openMenu();
   });
 
-  /* Overlay click closes menu */
   navOverlay.addEventListener('click', closeMenu);
 
-  /* Each nav link closes menu on tap */
   navLinks.forEach(function (link) {
     link.addEventListener('click', function () {
       if (isMenuOpen) closeMenu();
@@ -96,9 +90,7 @@
   });
 
   /* ══════════════════════════════════════════════════════════
-     4. SMOOTH SCROLL — unified, works on Android & iOS
-        Uses getBoundingClientRect for reliability.
-        Falls back to CSS scroll-behavior when available.
+     4. SMOOTH SCROLL
      ══════════════════════════════════════════════════════════ */
   var NAV_HEIGHT = parseInt(
     getComputedStyle(document.documentElement).getPropertyValue('--nav-h') || '60',
@@ -111,7 +103,6 @@
     try {
       window.scrollTo({ top: top, behavior: 'smooth' });
     } catch (e) {
-      /* Safari < 14 fallback */
       smoothScrollTo(top, 600);
     }
   }
@@ -130,7 +121,6 @@
     requestAnimationFrame(step);
   }
 
-  /* Attach to ALL anchor links */
   $$('a[href^="#"]').forEach(function (anchor) {
     anchor.addEventListener('click', function (e) {
       var id = anchor.getAttribute('href');
@@ -139,66 +129,93 @@
       if (!target) return;
       e.preventDefault();
       if (isMenuOpen) closeMenu();
-      /* Small delay so menu slide-out doesn't fight scroll */
       setTimeout(function () { scrollToSection(target); }, isMenuOpen ? 350 : 0);
     });
   });
 
   /* ══════════════════════════════════════════════════════════
-     5. IFRAME — load on demand + Android interaction fix
-        Android WebView blocks iframes with src="about:blank".
-        Solution: inject a real YouTube nocookie URL when the
-        section comes into view, wrapped in a tap-to-play
-        overlay so Android's touch restrictions don't block it.
-     ══════════════════════════════════════════════════════════ */
-  var videoWrap   = $('.video-wrap__inner');
-  var currentVideoId = DEFAULT_VIDEO_ID;
-  var iframeLoaded   = false;
+     5. IFRAME — YouTube embed fix
 
-  function buildYouTubeUrl(videoId) {
+     ROOT CAUSE of "video not available" / redirect to YouTube:
+     ① autoplay=1 alone doesn't work — needs mute=1 on mobile
+        OR we open inside an actual user-gesture handler.
+     ② The SVG inside .yt-overlay__play was catching the tap
+        and NOT bubbling correctly on some Android WebViews.
+     ③ Double-fire: both touchend+click were calling activate.
+
+     SOLUTION:
+     - Add pointer-events:none to everything INSIDE the overlay
+       so the overlay div itself always receives the event.
+     - Use a single "activated" flag to prevent double-fire.
+     - Use youtube-nocookie + rel=0 + modestbranding.
+     - For autoplay: include autoplay=1&mute=0. On iOS/Android
+       this works when triggered from a real touch/click handler.
+     ══════════════════════════════════════════════════════════ */
+  var videoWrap      = $('.video-wrap__inner');
+  var currentVideoId = DEFAULT_VIDEO_ID;
+
+  function buildYouTubeUrl(videoId, autoplay) {
     return 'https://www.youtube-nocookie.com/embed/' + videoId
-      + '?rel=0&modestbranding=1&playsinline=1&enablejsapi=0';
+      + '?rel=0&modestbranding=1&playsinline=1'
+      + (autoplay ? '&autoplay=1' : '');
   }
 
   function loadIframe(videoId) {
     if (!videoWrap) return;
     videoId = videoId || DEFAULT_VIDEO_ID;
 
-    /* Remove old iframe / overlay */
     videoWrap.innerHTML = '';
 
-    /* ── Tap-to-play overlay (critical for Android) ── */
+    /* ── Thumbnail overlay ── */
     var overlay = document.createElement('div');
     overlay.className = 'yt-overlay';
     overlay.setAttribute('role', 'button');
     overlay.setAttribute('tabindex', '0');
-    overlay.setAttribute('aria-label', 'Play video on YouTube');
+    overlay.setAttribute('aria-label', 'Play video');
+
+    /* CRITICAL: pointer-events:none on children so the overlay
+       div itself always receives the touch/click event         */
     overlay.innerHTML =
-      '<div class="yt-overlay__thumb" style="background-image:url(https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg)">' +
-      '<div class="yt-overlay__play"><svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#ff0000"/><path d="M45 24 27 14v20" fill="#fff"/></svg></div>' +
+      '<div class="yt-overlay__thumb" style="background-image:url(https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg);pointer-events:none">' +
+        '<div class="yt-overlay__play" style="pointer-events:none">' +
+          '<svg viewBox="0 0 68 48" xmlns="http://www.w3.org/2000/svg" style="pointer-events:none">' +
+            '<path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#ff0000"/>' +
+            '<path d="M45 24 27 14v20" fill="#fff"/>' +
+          '</svg>' +
+        '</div>' +
       '</div>';
 
-    function activateIframe() {
+    var activated = false; /* prevent double-fire */
+
+    function activateIframe(e) {
+      if (activated) return;
+      activated = true;
+      if (e && e.preventDefault) e.preventDefault();
+
       overlay.style.display = 'none';
+
       var iframe = document.createElement('iframe');
-      iframe.src = buildYouTubeUrl(videoId) + '&autoplay=1';
+      /* autoplay works when called from a real user gesture */
+      iframe.src = buildYouTubeUrl(videoId, true);
       iframe.title = 'Ángela Bendeck video';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
       iframe.allowFullscreen = true;
       iframe.setAttribute('frameborder', '0');
       iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
       videoWrap.appendChild(iframe);
-      iframeLoaded = true;
     }
 
+    /* Use BOTH touchend and click but guard with `activated` flag */
+    overlay.addEventListener('touchend',  activateIframe, { passive: false });
     overlay.addEventListener('click',     activateIframe);
-    overlay.addEventListener('touchend',  function (e) { e.preventDefault(); activateIframe(); });
-    overlay.addEventListener('keydown',   function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateIframe(); } });
+    overlay.addEventListener('keydown',   function (e) {
+      if (e.key === 'Enter' || e.key === ' ') activateIframe(e);
+    });
 
     videoWrap.appendChild(overlay);
   }
 
-  /* Load when video section scrolls into view */
+  /* Load when music section scrolls into view */
   var musicSection = $('#music');
   if (musicSection && 'IntersectionObserver' in window) {
     var videoObserver = new IntersectionObserver(function (entries) {
@@ -213,11 +230,9 @@
   }
 
   /* ══════════════════════════════════════════════════════════
-     6. SONG CARDS — tap to flip + change video
-        Touch fix: use touchstart to detect intent, touchend to
-        confirm (prevents ghost clicks on Android).
+     6. SONG CARDS
      ══════════════════════════════════════════════════════════ */
-  var songCards   = $$('.song-card');
+  var songCards    = $$('.song-card');
   var videoCaption = $('.video-wrap__caption .gold');
 
   function flipCard(card) {
@@ -226,21 +241,14 @@
     if (!isFlipped) {
       card.classList.add('flipped');
 
-      /* Change video */
       var titleEl  = card.querySelector('.song-card__title');
       var titleTxt = titleEl ? titleEl.textContent.trim() : '';
       var videoId  = SONG_VIDEOS[titleTxt];
 
       if (videoId !== undefined && videoId !== '' && videoId !== currentVideoId) {
         currentVideoId = videoId;
-
-        /* Update caption */
         if (videoCaption) videoCaption.textContent = titleTxt;
-
-        /* Reload iframe with new video */
         loadIframe(currentVideoId);
-
-        /* Scroll to video so user sees it */
         scrollToSection(musicSection);
       }
     }
@@ -258,12 +266,11 @@
     }, { passive: true });
 
     card.addEventListener('touchend', function (e) {
-      if (touchMoved) return;       /* user was scrolling, not tapping */
-      e.preventDefault();           /* prevent ghost click 300ms later  */
+      if (touchMoved) return;
+      e.preventDefault();
       flipCard(card);
     });
 
-    /* Desktop mouse click */
     card.addEventListener('click', function (e) {
       e.stopPropagation();
       flipCard(card);
@@ -274,7 +281,6 @@
     });
   });
 
-  /* Tap anywhere else to close flipped card */
   document.addEventListener('click',    function () { songCards.forEach(function (c) { c.classList.remove('flipped'); }); });
   document.addEventListener('touchend', function () { songCards.forEach(function (c) { c.classList.remove('flipped'); }); });
 
@@ -326,9 +332,7 @@
   updateActiveLink();
 
   /* ══════════════════════════════════════════════════════════
-     9. AUTO-SCROLL TO VIDEO on first load (after 1.2s)
-        Gives the hero animation time to finish, then gently
-        scrolls so the video is visible.
+     9. AUTO-SCROLL TO VIDEO on first load
      ══════════════════════════════════════════════════════════ */
   setTimeout(function () {
     if (musicSection) scrollToSection(musicSection);
