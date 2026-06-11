@@ -1,0 +1,114 @@
+/* ═══════════════════════════════════════════════════════════
+   PATCH — style.css additions / overrides  (v2)
+   Add these rules at the BOTTOM of your existing style.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Nav overlay: pointer-events:none when inactive ──────── */
+/* CRITICAL FIX: when overlay is NOT .active it was blocking
+   all touch events on the page below it on Android.        */
+.nav__overlay {
+  pointer-events: none;   /* default: transparent to touches */
+}
+.nav__overlay.active {
+  pointer-events: auto;   /* only intercept touches when open */
+}
+
+/* ── Follow buttons: ensure tappable on Android ──────────── */
+/* Android sometimes ignores touch on elements with certain
+   CSS combos. Force a GPU layer + explicit pointer.        */
+.follow__btn {
+  position: relative;
+  z-index: 1;
+  -webkit-transform: translateZ(0);  /* create GPU layer */
+  transform: translateZ(0);
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: rgba(255,255,255,0.15);
+}
+
+/* ── Song cards: same GPU/pointer fix ───────────────────── */
+.song-card {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* ── Hero scroll button ──────────────────────────────────── */
+.hero__scroll {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── YouTube tap-to-play overlay ─────────────────────────── */
+.yt-overlay {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  display: block;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  z-index: 2;
+}
+
+.yt-overlay__thumb {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Dark gradient overlay on thumbnail */
+.yt-overlay__thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+}
+
+.yt-overlay__play {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.yt-overlay__play svg {
+  width: 72px;
+  height: 52px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+}
+
+.yt-overlay:hover  .yt-overlay__play,
+.yt-overlay:active .yt-overlay__play {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+
+/* ── Ensure video-wrap__inner has correct stacking ──────── */
+.video-wrap__inner {
+  position: relative;
+  z-index: 0;
+}
+
+/* ── Burger fix: always on top, never blocked ───────────── */
+.nav__burger {
+  position: relative;
+  z-index: 1002;
+}
+
+/* ── Mobile: section padding so content isn't under nav ─── */
+@media (max-width: 768px) {
+  .section {
+    padding: 64px 0;
+  }
+}
+
+/* ── Safe-area padding for the Follow section ────────────── */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .section--follow {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+}
