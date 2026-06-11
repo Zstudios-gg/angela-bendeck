@@ -1,14 +1,17 @@
 /**
- * Ángela Bendeck — script.js  (v3 — YouTube embed fix)
- * Fixes: touch events, iframe interaction, autoplay policy,
- *        SVG pointer-events, double-fire prevention
+ * Ángela Bendeck — script.js  (v4 — YouTube ID fix + fallback link)
+ * Fixes:
+ *  - Extracts clean video ID from any YouTube URL format (youtu.be, watch?v=, ?si=, etc.)
+ *  - Shows a "Ver en YouTube" fallback link if embed fails or is blocked
+ *  - Touch events, iframe interaction, autoplay policy
+ *  - SVG pointer-events, double-fire prevention
  */
 
 (function () {
   'use strict';
 
   /* ══════════════════════════════════════════════════════════
-     SONG → VIDEO MAP
+     SONG → VIDEO MAP  (full YouTube URLs — IDs extracted automatically)
      ══════════════════════════════════════════════════════════ */
   var SONG_VIDEOS = {
     'Mi Felicidad':          'https://youtu.be/dvvh-z3hXUM?si=3PRlVJ1TFUAvTA4n',
@@ -21,16 +24,36 @@
     'Mi Sol':                'https://youtu.be/mRfKqPqvk-o?si=3VIdhYkIHTtGwMP_'
   };
 
-  var DEFAULT_VIDEO_ID = 'https://youtu.be/dvvh-z3hXUM?si=3PRlVJ1TFUAvTA4n';
+  var DEFAULT_VIDEO_URL = 'https://youtu.be/dvvh-z3hXUM?si=3PRlVJ1TFUAvTA4n';
 
   /* ══════════════════════════════════════════════════════════
      1. UTILITY
      ══════════════════════════════════════════════════════════ */
-  function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function $(sel, ctx)  { return (ctx || document).querySelector(sel); }
   function $$(sel, ctx) { return Array.from((ctx || document).querySelectorAll(sel)); }
 
   /* ══════════════════════════════════════════════════════════
-     2. iOS VIEWPORT HEIGHT FIX
+     2. EXTRACT YOUTUBE VIDEO ID from any URL format
+        Handles: youtu.be/ID, watch?v=ID, embed/ID, ?si=..., bare ID
+     ══════════════════════════════════════════════════════════ */
+  function extractYouTubeId(url) {
+    if (!url) return null;
+    // Already a bare 11-char ID
+    if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+    // youtu.be/ID
+    var m = url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    // youtube.com/watch?v=ID  or  ?v=ID anywhere
+    m = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    // youtube.com/embed/ID
+    m = url.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+    if (m) return m[1];
+    return null;
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     3. iOS VIEWPORT HEIGHT FIX
      ══════════════════════════════════════════════════════════ */
   function setVH() {
     var vh = window.innerHeight * 0.01;
@@ -41,7 +64,7 @@
   window.addEventListener('orientationchange', function () { setTimeout(setVH, 250); }, { passive: true });
 
   /* ══════════════════════════════════════════════════════════
-     3. NAV
+     4. NAV
      ══════════════════════════════════════════════════════════ */
   var nav        = $('#nav');
   var burger     = $('#burger');
@@ -90,7 +113,7 @@
   });
 
   /* ══════════════════════════════════════════════════════════
-     4. SMOOTH SCROLL
+     5. SMOOTH SCROLL
      ══════════════════════════════════════════════════════════ */
   var NAV_HEIGHT = parseInt(
     getComputedStyle(document.documentElement).getPropertyValue('--nav-h') || '60',
@@ -113,7 +136,7 @@
     var startTime = null;
     function step(now) {
       if (!startTime) startTime = now;
-      var t = Math.min((now - startTime) / duration, 1);
+      var t    = Math.min((now - startTime) / duration, 1);
       var ease = t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t;
       window.scrollTo(0, startY + distance * ease);
       if (t < 1) requestAnimationFrame(step);
@@ -134,35 +157,55 @@
   });
 
   /* ══════════════════════════════════════════════════════════
-     5. IFRAME — YouTube embed fix
-
-     ROOT CAUSE of "video not available" / redirect to YouTube:
-     ① autoplay=1 alone doesn't work — needs mute=1 on mobile
-        OR we open inside an actual user-gesture handler.
-     ② The SVG inside .yt-overlay__play was catching the tap
-        and NOT bubbling correctly on some Android WebViews.
-     ③ Double-fire: both touchend+click were calling activate.
-
-     SOLUTION:
-     - Add pointer-events:none to everything INSIDE the overlay
-       so the overlay div itself always receives the event.
-     - Use a single "activated" flag to prevent double-fire.
-     - Use youtube-nocookie + rel=0 + modestbranding.
-     - For autoplay: include autoplay=1&mute=0. On iOS/Android
-       this works when triggered from a real touch/click handler.
+     6. FALLBACK — shown when YouTube embed is blocked
      ══════════════════════════════════════════════════════════ */
-  var videoWrap      = $('.video-wrap__inner');
-  var currentVideoId = DEFAULT_VIDEO_ID;
+  function showFallbackLink(videoId) {
+    if (!videoWrap) return;
+    videoWrap.innerHTML = '';
 
-  function buildYouTubeUrl(videoId, autoplay) {
-    return 'https://www.youtube-nocookie.com/embed/' + videoId
-      + '?rel=0&modestbranding=1&playsinline=1'
-      + (autoplay ? '&autoplay=1' : '');
+    var ytUrl    = 'https://www.youtube.com/watch?v=' + videoId;
+    var fallback = document.createElement('a');
+    fallback.href   = ytUrl;
+    fallback.target = '_blank';
+    fallback.rel    = 'noopener noreferrer';
+    fallback.style.cssText =
+      'position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;' +
+      'justify-content:center;gap:14px;background:#0a0a0a;color:#fff;font-family:inherit;' +
+      'text-decoration:none;border-radius:12px;padding:24px;text-align:center;cursor:pointer;';
+
+    fallback.innerHTML =
+      '<svg viewBox="0 0 68 48" width="72" height="52" aria-hidden="true">' +
+        '<path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#ff0000"/>' +
+        '<path d="M45 24 27 14v20" fill="#fff"/>' +
+      '</svg>' +
+      '<span style="font-size:1.05rem;font-weight:700;color:#fff;">Ver en YouTube</span>' +
+      '<span style="font-size:0.82rem;color:#aaa;line-height:1.5;">Este video no puede reproducirse aquí.<br>Toca para abrirlo directamente en YouTube.</span>';
+
+    videoWrap.appendChild(fallback);
   }
 
-  function loadIframe(videoId) {
+  /* ══════════════════════════════════════════════════════════
+     7. IFRAME — build embed URL
+     ══════════════════════════════════════════════════════════ */
+  var videoWrap      = $('.video-wrap__inner');
+  var currentVideoId = DEFAULT_VIDEO_URL;  /* stored as full URL; ID extracted on use */
+
+  function buildYouTubeUrl(videoId, autoplay) {
+    return 'https://www.youtube-nocookie.com/embed/' + videoId +
+      '?rel=0&modestbranding=1&playsinline=1' +
+      (autoplay ? '&autoplay=1' : '');
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     8. LOAD IFRAME
+        videoUrl can be a full YouTube URL or a bare video ID.
+        We always extract the clean 11-char ID before use.
+     ══════════════════════════════════════════════════════════ */
+  function loadIframe(videoUrl) {
     if (!videoWrap) return;
-    videoId = videoId || DEFAULT_VIDEO_ID;
+
+    var videoId = extractYouTubeId(videoUrl) || extractYouTubeId(DEFAULT_VIDEO_URL);
+    if (!videoId) { showFallbackLink(''); return; }
 
     videoWrap.innerHTML = '';
 
@@ -173,8 +216,7 @@
     overlay.setAttribute('tabindex', '0');
     overlay.setAttribute('aria-label', 'Play video');
 
-    /* CRITICAL: pointer-events:none on children so the overlay
-       div itself always receives the touch/click event         */
+    /* pointer-events:none on children so overlay div always receives the event */
     overlay.innerHTML =
       '<div class="yt-overlay__thumb" style="background-image:url(https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg);pointer-events:none">' +
         '<div class="yt-overlay__play" style="pointer-events:none">' +
@@ -195,13 +237,55 @@
       overlay.style.display = 'none';
 
       var iframe = document.createElement('iframe');
-      /* autoplay works when called from a real user gesture */
-      iframe.src = buildYouTubeUrl(videoId, true);
-      iframe.title = 'Ángela Bendeck video';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.src           = buildYouTubeUrl(videoId, true);
+      iframe.title         = 'Ángela Bendeck video';
+      iframe.allow         = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
       iframe.allowFullscreen = true;
       iframe.setAttribute('frameborder', '0');
       iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+
+      /*
+       * YouTube embeds that are blocked don't fire iframe 'error' —
+       * they load successfully but show an error page inside.
+       * We use a postMessage listener: YouTube sends specific messages
+       * when the player initialises. If we get no message within 8s
+       * after load, we assume it's blocked and show the fallback.
+       */
+      var loadedOnce  = false;
+      var fallbackTimer = null;
+
+      function onYTMessage(evt) {
+        // YouTube player API sends JSON strings
+        if (typeof evt.data !== 'string') return;
+        try {
+          var data = JSON.parse(evt.data);
+          // Any valid YT postMessage means embed is working
+          if (data.event || data.info !== undefined) {
+            loadedOnce = true;
+            clearTimeout(fallbackTimer);
+            window.removeEventListener('message', onYTMessage);
+          }
+        } catch (_) {}
+      }
+
+      window.addEventListener('message', onYTMessage);
+
+      iframe.addEventListener('load', function () {
+        // Give YouTube 8s to send its first postMessage
+        fallbackTimer = setTimeout(function () {
+          if (!loadedOnce) {
+            window.removeEventListener('message', onYTMessage);
+            showFallbackLink(videoId);
+          }
+        }, 8000);
+      });
+
+      iframe.addEventListener('error', function () {
+        clearTimeout(fallbackTimer);
+        window.removeEventListener('message', onYTMessage);
+        showFallbackLink(videoId);
+      });
+
       videoWrap.appendChild(iframe);
     }
 
@@ -230,7 +314,7 @@
   }
 
   /* ══════════════════════════════════════════════════════════
-     6. SONG CARDS
+     9. SONG CARDS
      ══════════════════════════════════════════════════════════ */
   var songCards    = $$('.song-card');
   var videoCaption = $('.video-wrap__caption .gold');
@@ -243,10 +327,10 @@
 
       var titleEl  = card.querySelector('.song-card__title');
       var titleTxt = titleEl ? titleEl.textContent.trim() : '';
-      var videoId  = SONG_VIDEOS[titleTxt];
+      var videoUrl = SONG_VIDEOS[titleTxt];
 
-      if (videoId !== undefined && videoId !== '' && videoId !== currentVideoId) {
-        currentVideoId = videoId;
+      if (videoUrl !== undefined && videoUrl !== '' && videoUrl !== currentVideoId) {
+        currentVideoId = videoUrl;
         if (videoCaption) videoCaption.textContent = titleTxt;
         loadIframe(currentVideoId);
         scrollToSection(musicSection);
@@ -285,7 +369,7 @@
   document.addEventListener('touchend', function () { songCards.forEach(function (c) { c.classList.remove('flipped'); }); });
 
   /* ══════════════════════════════════════════════════════════
-     7. REVEAL ANIMATIONS
+     10. REVEAL ANIMATIONS
      ══════════════════════════════════════════════════════════ */
   var revealEls = $$('.reveal');
 
@@ -310,7 +394,7 @@
   }
 
   /* ══════════════════════════════════════════════════════════
-     8. ACTIVE NAV LINK
+     11. ACTIVE NAV LINK
      ══════════════════════════════════════════════════════════ */
   var sections = $$('section[id]');
 
@@ -332,7 +416,7 @@
   updateActiveLink();
 
   /* ══════════════════════════════════════════════════════════
-     9. AUTO-SCROLL TO VIDEO on first load
+     12. AUTO-SCROLL TO VIDEO on first load
      ══════════════════════════════════════════════════════════ */
   setTimeout(function () {
     if (musicSection) scrollToSection(musicSection);
